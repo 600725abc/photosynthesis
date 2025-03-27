@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光合作用：了解生命的能量來源</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .page {
+            min-height: 100vh;
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .page.active {
+            display: flex;
+        }
+        
+        #cover {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://placehold.co/1200x800/006400/FFFFFF?text=光合作用');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        #cover h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        #cover p {
+            margin-top: auto;
+            padding: 1rem;
+        }
+        
+        .content-page {
+            background-color: #388e3c;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        .term {
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background-color: #1b5e20;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0d3010;
+            transform: translateY(-3px);
+        }
+        
+        .btn-primary {
+            background-color: #8bc34a;
+        }
+        
+        .btn-secondary {
+            background-color: #1565c0;
+        }
+        
+        .btn-return {
+            background-color: #f44336;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        
+        .hidden-content {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+        
+        .animation-container {
+            width: 100%;
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 6px;
+            background-color: #ffeb3b;
+            transition: width 0.3s ease;
+        }
+        
+        /* 封面動畫 */
+        .sun-rays {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: transparent;
+            border-radius: 50%;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px 10px #ffeb3b;
+            animation: pulse 3s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px 5px #ffeb3b; }
+            100% { box-shadow: 0 0 40px 20px #ffeb3b; }
+        }
+        
+        /* 光合作用介紹動畫 */
+        .sun {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            top: 30px;
+            left: 20%;
+            animation: shine 4s infinite alternate;
+        }
+        
+        @keyframes shine {
+            0% { transform: scale(1); box-shadow: 0 0 10px #ffeb3b; }
+            100% { transform: scale(1.1); box-shadow: 0 0 30px #ffeb3b; }
+        }
+        
+        .plant {
+            position: absolute;
+            width: 100px;
+            height: 120px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .stem {
+            position: absolute;
+            width: 10px;
+            height: 80px;
+            background-color: #4caf50;
+            bottom: 0;
+            left: 45px;
+        }
+        
+        .leaf {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            background-color: #4caf50;
+            border-radius: 50%;
+            bottom: 60px;
+            animation: leafGrow 5s infinite;
+        }
+        
+        .leaf.left {
+            left: 15px;
+            transform: rotate(30deg);
+        }
+        
+        .leaf.right {
+            left: 35px;
+            transform: rotate(-30deg);
+        }
+        
+        @keyframes leafGrow {
+            0% { transform: scale(0.8) rotate(30deg); }
+            50% { transform: scale(1.1) rotate(35deg); }
+            100% { transform: scale(0.8) rotate(30deg); }
+        }
+        
+        .photon {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: photonMove 3s linear infinite;
+        }
+        
+        @keyframes photonMove {
+            0% {
+                top: 60px;
+                left: 120px;
+                opacity: 1;
+            }
+            100% {
+                top: 90px;
+                left: 200px;
+                opacity: 0;
+            }
+        }
+        
+        /* 光反應動畫 */
+        .chloroplast {
+            position: absolute;
+            width: 200px;
+            height: 80px;
+            background-color: #81c784;
+            border-radius: 40px;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .thylakoid {
+            position: absolute;
+            width: 160px;
+            height: 40px;
+            background-color: #388e3c;
+            border-radius: 20px;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .electron {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #2196f3;
+            border-radius: 50%;
+            animation: electronMove 4s linear infinite;
+        }
+        
+        @keyframes electronMove {
+            0% { top: 40px; left: 40px; }
+            25% { top: 30px; left: 80px; }
+            50% { top: 50px; left: 120px; }
+            75% { top: 40px; left: 150px; }
+            100% { top: 40px; left: 40px; }
+        }
+        
+        .oxygen {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #e3f2fd;
+            border-radius: 50%;
+            opacity: 0;
+            animation: oxygenRise 5s infinite;
+        }
+        
+        @keyframes oxygenRise {
+            0% { bottom: 80px; left: 50%; opacity: 0; }
+            30% { opacity: 0.8; }
+            100% { bottom: 220px; left: 50%; opacity: 0; }
+        }
+        
+        /* 卡爾文循環動畫 */
+        .calvin-cycle {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 4px dashed #aed581;
+            border-radius: 50%;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: rotate 15s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+        
+        .molecule {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .co2 {
+            background-color: #ef5350;
+            top: -10px;
+            left: 50px;
+        }
+        
+        .sugar {
+            background-color: #ffeb3b;
+            bottom: -10px;
+            left: 50px;
+        }
+        
+        /* 影響因素動畫 */
+        .factor-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .factor {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            animation: factorPulse 3s infinite alternate;
+        }
+        
+        @keyframes factorPulse {
+            0% { transform: scale(0.9); }
+            100% { transform: scale(1.1); }
+        }
+        
+        .light {
+            background-color: #ffeb3b;
+            top: 20px;
+            left: 20%;
+        }
+        
+        .water {
+            background-color: #2196f3;
+            top: 140px;
+            left: 20%;
+        }
+        
+        .temperature {
+            background-color: #ff7043;
+            top: 20px;
+            left: 60%;
+        }
+        
+        .co2-factor {
+            background-color: #78909c;
+            top: 140px;
+            left: 60%;
+        }
+        
+        /* 總結動畫 */
+        .cycle-animation {
+            position: absolute;
+            width: 80%;
+            height: 160px;
+            top: 40px;
+            left: 10%;
+        }
+        
+        .cycle-step {
+            position: absolute;
+            width: 100px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            animation: highlight 8s infinite;
+        }
+        
+        @keyframes highlight {
+            0%, 25% { transform: scale(1); box-shadow: 0 0 5px yellow; }
+            5%, 20% { transform: scale(1.1); box-shadow: 0 0 15px yellow; }
+            30%, 100% { transform: scale(1); box-shadow: none; }
+        }
+        
+        .step1 {
+            background-color: #4caf50;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .step2 {
+            background-color: #8bc34a;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 3s;
+        }
+        
+        .step3 {
+            background-color: #cddc39;
+            left: 70%;
+            animation-delay: 6s;
+        }
+        
+        .arrow {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            top: 80px;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid #aed581;
+            right: 0;
+            top: 0;
+        }
+        
+        .arrow::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 5px;
+            background-color: #aed581;
+            left: 0;
+            top: 7.5px;
+        }
+        
+        .arrow1 {
+            left: 25%;
+            transform: rotate(30deg);
+        }
+        
+        .arrow2 {
+            left: 55%;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- 封面頁 -->
+    <section id="cover" class="page active">
+        <div class="animation-container">
+            <div class="sun-rays"></div>
+        </div>
+        <h1>光合作用：了解生命的能量來源</h1>
+        <button class="btn btn-primary" onclick="navigate(1)">開始探索</button>
+        <p>Created by Patricia Liu</p>
+    </section>
+    
+    <!-- 介紹頁 -->
+    <section id="page1" class="page content-page">
+        <div class="container">
+            <h2>植物的超能力</h2>
+            <div class="animation-container">
+                <div class="sun"></div>
+                <div class="plant">
+                    <div class="stem"></div>
+                    <div class="leaf left"></div>
+                    <div class="leaf right"></div>
+                </div>
+                <div class="photon" style="animation-delay: 0s;"></div>
+                <div class="photon" style="animation-delay: 1s; left: 150px;"></div>
+                <div class="photon" style="animation-delay: 2s; left: 180px;"></div>
+            </div>
+            
+            <p><span class="term">光合作用</span>是植物的超能力！它們把陽光變成食物，同時製造出我們呼吸的氧氣。</p>
+            
+            <div class="formula">
+                二氧化碳 + 水 + 陽光 → 糖 + 氧氣
+            </div>
+            
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="toggleContent('more-intro')">小知識</button>
+            </div>
+            
+            <div id="more-intro" class="hidden-content">
+                <p>有趣的是，地球上幾乎所有生物的能量都來自光合作用。沒有它，我們的星球會完全不同！</p>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="navigate(0)">上一頁</button>
+                <button class="btn" onclick="navigate(2)">下一頁</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 光反應頁 -->
+    <section id="page2" class="page content-page">
+        <div class="container">
+            <h2>捕捉陽光</h2>
+            <div class="animation-container">
+                <div class="chloroplast">
+                    <div class="thylakoid"></div>
+                </div>
+                <div class="electron"></div>
+                <div class="electron" style="animation-delay: 1s;"></div>
+                <div class="oxygen" style="animation-delay: 0s;"></div>
+                <div class="oxygen" style="animation-delay: 2s;"></div>
+                <div class="oxygen" style="animation-delay: 4s;"></div>
+            </div>
+            
+            <p>在<span class="term">光反應</span>中，植物葉綠體捕捉陽光，分解水分子，釋放氧氣，並儲存能量。</p>
+            <p>這就像是為植物的「能量電池」充電！</p>
+            
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="toggleContent('more-light')">小知識</button>
+            </div>
+            
+            <div id="more-light" class="hidden-content">
+                <p>葉子是綠色的原因是因為葉綠素反射綠光。所以我們看到的正是植物不需要的顏色！</p>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="navigate(1)">上一頁</button>
+                <button class="btn" onclick="navigate(3)">下一頁</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 卡爾文循環頁 -->
+    <section id="page3" class="page content-page">
+        <div class="container">
+            <h2>製造食物</h2>
+            <div class="animation-container">
+                <div class="calvin-cycle">
+                    <div class="molecule co2"></div>
+                    <div class="molecule sugar"></div>
+                </div>
+            </div>
+            
+            <p>在<span class="term">卡爾文循環</span>中，植物利用儲存的能量，把二氧化碳變成糖（食物）。</p>
+            <p>這個過程就像是植物的廚房，把原料變成美味大餐！</p>
+            
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="toggleContent('more-calvin')">小知識</button>
+            </div>
+            
+            <div id="more-calvin" class="hidden-content">
+                <p>一片葉子每秒可以進行上百萬次光合作用反應！植物是真正的超級工廠。</p>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="navigate(2)">上一頁</button>
+                <button class="btn" onclick="navigate(4)">下一頁</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 影響因素頁 -->
+    <section id="page4" class="page content-page">
+        <div class="container">
+            <h2>影響光合作用的因素</h2>
+            <div class="animation-container">
+                <div class="factor-container">
+                    <div class="factor light">光照</div>
+                    <div class="factor water">水分</div>
+                    <div class="factor temperature">溫度</div>
+                    <div class="factor co2-factor">二氧化碳</div>
+                </div>
+            </div>
+            
+            <p>植物的「超能力」會受到環境的影響：</p>
+            <ul>
+                <li><span class="term">光照</span>: 更多陽光通常意味著更快的光合作用</li>
+                <li><span class="term">水分</span>: 沒有水，植物就無法進行光合作用</li>
+                <li><span class="term">溫度</span>: 太冷或太熱都會減慢反應速度</li>
+                <li><span class="term">二氧化碳</span>: 這是製造食物的重要原料</li>
+            </ul>
+            
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="toggleContent('more-factors')">小知識</button>
+            </div>
+            
+            <div id="more-factors" class="hidden-content">
+                <p>這就是為什麼溫室種植效果好 — 我們可以控制所有這些因素，讓植物達到最佳生長狀態！</p>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="navigate(3)">上一頁</button>
+                <button class="btn" onclick="navigate(5)">下一頁</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 總結頁 -->
+    <section id="page5" class="page content-page">
+        <div class="container">
+            <h2>生命的能量循環</h2>
+            <div class="animation-container">
+                <div class="cycle-animation">
+                    <div class="cycle-step step1">捕捉陽光</div>
+                    <div class="arrow arrow1"></div>
+                    <div class="cycle-step step2">製造食物</div>
+                    <div class="arrow arrow2"></div>
+                    <div class="cycle-step step3">提供能量</div>
+                </div>
+            </div>
+            
+            <p>光合作用是地球上最奇妙的過程之一，把太陽能轉變為生命能量。</p>
+            <p>植物、人類和動物們一起參與這個偉大的能量循環，讓地球充滿生機！</p>
+            
+            <div class="button-container">
+                <button class="btn btn-return" onclick="navigate(0)">返回主頁</button>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="navigate(4)">上一頁</button>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        let currentPage = 0;
+        const totalPages = 6;
+        
+        function navigate(pageIndex) {
+            document.querySelector('.page.active').classList.remove('active');
+            
+            if (pageIndex === 0) {
+                document.getElementById('cover').classList.add('active');
+                currentPage = 0;
+            } else {
+                document.getElementById('page' + pageIndex).classList.add('active');
+                currentPage = pageIndex;
+            }
+            
+            updateProgressBar();
+        }
+        
+        function updateProgressBar() {
+            const progress = (currentPage / (totalPages - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        }
+        
+        // 初始化進度條
+        updateProgressBar();
+        
+        // 創建隨機光子效果
+        function createRandomPhotons() {
+            const pages = document.querySelectorAll('.page');
+            
+            pages.forEach(page => {
+                if (page.id === 'page1') {
+                    const container = page.querySelector('.animation-container');
+                    setInterval(() => {
+                        const photon = document.createElement('div');
+                        photon.className = 'photon';
+                        photon.style.top = '60px';
+                        photon.style.left = (Math.random() * 100 + 100) + 'px';
+                        photon.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        container.appendChild(photon);
+                        
+                        setTimeout(() => {
+                            photon.remove();
+                        }, 3000);
+                    }, 800);
+                }
+            });
+        }
+        
+        // 頁面加載後啟動動畫
+        window.onload = function() {
+            createRandomPhotons();
+        };
+    </script>
+</body>
+</html>
